@@ -12,13 +12,35 @@ use Illuminate\Validation\Rule;
 
 class TransactionsController extends Controller
 {
-    public function index(){
-        $transactions = TransactionModel::with('product')
-            ->orderBy('id', 'desc')
+    public function index(Request $request){
+        $length = $request->input('length', 10);
+        $start = $request->input('start', 0);   
+        $search = $request->input('search.value'); 
+
+        $query = TransactionModel::with(['product:id,nama'])
+            ->select('id','product_id','qty_terjual','total_penjualan','lokasi','channel','customer','tanggal_transaksi');
+
+        if ($search) {
+            $query->whereHas('product', function($q) use ($search) {
+                $q->where('nama', 'like', "%{$search}%");
+            })->orWhere('customer', 'like', "%{$search}%");
+        }
+
+        $totalData = $query->count();
+
+        $transactions = $query->orderBy('id', 'desc')
+            ->skip($start)
+            ->take($length)
             ->get();
 
-        return response()->json($transactions);
+        return response()->json([
+            'draw' => intval($request->input('draw')), // untuk DataTables
+            'recordsTotal' => $totalData,
+            'recordsFiltered' => $totalData,
+            'data' => $transactions,
+        ]);
     }
+
 
     public function store(Request $request){
         $validated = $request->validate([
