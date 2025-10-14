@@ -1,0 +1,148 @@
+<?php
+
+namespace App\Http\Controllers\Api;
+
+use App\Http\Controllers\Controller;
+use App\Models\ProductModel;
+use App\Models\TransactionModel;
+use Carbon\Carbon;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\Rule;
+
+class TransactionsController extends Controller
+{
+    public function index(){
+        $transactions = TransactionModel::with('product')
+            ->orderBy('id', 'desc')
+            ->get();
+
+        return response()->json($transactions);
+    }
+
+    public function store(Request $request){
+        $validated = $request->validate([
+            'product_id'         => 'required|exists:products,id',
+            'qty_terjual'        => 'required|integer|min:1',
+            'total_penjualan'    => 'required|numeric|min:0',
+            'lokasi'             => 'required|string|max:255',
+            'channel'            => ['required', Rule::in(['Online', 'Offline', 'Event'])],
+            'customer'           => 'required|string|max:255',
+            'tanggal_transaksi'  => 'required|date',
+        ]);
+
+        $transaction = TransactionModel::create($validated);
+
+        return response()->json([
+            'message' => 'Transaksi berhasil ditambahkan',
+            'data'    => $transaction->load('product'),
+        ], 201);
+    }
+
+    public function show($id){
+        $transaction = TransactionModel::with('product')->find($id);
+
+        if (!$transaction) {
+            return response()->json(['message' => 'Transaksi tidak ditemukan'], 404);
+        }
+
+        return response()->json($transaction);
+    }
+
+    public function update(Request $request, $id){
+        $transaction = TransactionModel::find($id);
+
+        if (!$transaction) {
+            return response()->json(['message' => 'Transaksi tidak ditemukan'], 404);
+        }
+
+        $validated = $request->validate([
+            'product_id'         => 'sometimes|required|exists:products,id',
+            'qty_terjual'        => 'sometimes|required|integer|min:1',
+            'total_penjualan'    => 'sometimes|required|numeric|min:0',
+            'lokasi'             => 'sometimes|required|string|max:255',
+            'channel'            => ['sometimes', 'required', Rule::in(['Online', 'Offline', 'Event'])],
+            'customer'           => 'sometimes|required|string|max:255',
+            'tanggal_transaksi'  => 'sometimes|required|date',
+        ]);
+
+        $transaction->update($validated);
+
+        return response()->json([
+            'message' => 'Transaksi berhasil diperbarui',
+            'data'    => $transaction->load('product'),
+        ]);
+    }
+
+    public function destroy($id){
+        $transaction = TransactionModel::find($id);
+
+        if (!$transaction) {
+            return response()->json(['message' => 'Transaksi tidak ditemukan'], 404);
+        }
+
+        $transaction->delete();
+
+        return response()->json(['message' => 'Transaksi berhasil dihapus']);
+    }
+
+    public function import(Request $request){
+        $request->validate([
+            'file' => 'required|mimes:csv,txt|max:2048',
+        ]);
+
+        $file = $request->file('file');
+        $path = $file->getRealPath();
+
+        $data = array_map('str_getcsv', file($path));
+
+        if (count($data) < 2) {
+            return response()->json(['error' => 'File CSV kosong atau tidak valid.'], 422);
+        }
+        $header = array_map('trim', $data[0]);
+        unset($data[0]);
+
+        DB::beginTransaction();
+        try {
+            foreach ($data as $index => $row) {
+                if (empty(array_filter($row))) continue;
+                $row = @array_combine($header, $row);
+                if (!$row) {
+                    throw new \Exception("Format CSV salah di baris ke-" . ($index + 2));
+                }
+                $productName = trim($row['Nama Produk'] ?? '');
+                $tanggalStr = trim($row['Tanggal Transaksi'] ?? '');
+                $qty = (int) ($row['Produk Terjual'] ?? 0);
+                $total = (float) str_replace(',', '', $row['Total Penjualan Produk (Rp)'] ?? 0);
+                $lokasi = trim($row['Lokasi'] ?? '');
+                $channel = trim($row['Channel (Online Offline Event)'] ?? '');
+                $customer = trim($row['Customer'] ?? '');
+
+                if (!$productName) continue;
+                $product = ProductModel::firstOrCreate(['nama' => $productName], ['harga' => 0]);
+                try {
+                    $tanggal = Carbon::createFromFormat('j-M-y', $tanggalStr)->format('Y-m-d');
+                } catch (\Exception $e) {
+                    $tanggal = now()->format('Y-m-d'); // fallback
+                }
+                TransactionModel::create([
+                    'product_id' => $product->id,
+                    'qty_terjual' => $qty,
+                    'total_penjualan' => $total,
+                    'lokasi' => $lokasi,
+                    'channel' => ucfirst(strtolower($channel)), // biar pasti 'Online' 'Offline' 'Event'
+                    'customer' => $customer,
+                    'tanggal_transaksi' => $tanggal,
+                ]);
+            }
+            DB::commit();
+            return response()->json(['status' => 'success']);
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            return response()->json([
+                'error' => 'Gagal import: ' . $th->getMessage(),
+                'line' => $th->getLine(),
+            ], 500);
+        }
+    }
+}

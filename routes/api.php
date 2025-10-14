@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\ProductsController;
+use App\Http\Controllers\Api\TransactionsController;
 use App\Http\Controllers\Api\UsersController ;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\AuthController;
@@ -12,4 +13,6 @@ Route::middleware('auth:sanctum')->post('/logout', [AuthController::class, 'logo
 Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('users', UsersController::class);
     Route::apiResource('products', ProductsController::class);
+    Route::apiResource('transactions', TransactionsController::class);
+    Route::post('/transactions/import', [TransactionsController::class, 'import']);
 });
