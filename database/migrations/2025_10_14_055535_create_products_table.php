@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('products', function (Blueprint $table) {
             $table->id();
-            $table->string('nama')->unique();
+            $table->string('nama');
             $table->string('endorser')->nullable(); 
             $table->decimal('harga', 15, 2)->nullable(); 
             $table->timestamps();
