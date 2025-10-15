@@ -23,8 +23,6 @@
 
 # 📦 Sales Dashboard System
 
-Sistem ini dibangun menggunakan **Laravel 12** untuk mencatat transaksi **pembelian dan penjualan** barang sekaligus menghitung **HPP (Harga Pokok Penjualan)** menggunakan **metode rata-rata (Average Method)** secara otomatis.
-
 Tujuan utama sistem ini adalah mempermudah proses perhitungan nilai persediaan dan harga pokok secara real-time berbasis transaksi yang terjadi.
 
 Sistem ini dibangun menggunakan **Laravel 12** sebagai backend dan Vue.js untuk frontend. Tujuan sistem adalah menampilkan **Dashboard Penjualan dengan role-based access (RBAC), realtime polling update, CRUD transaksi, dan import CSV untuk update data**.
@@ -32,8 +30,6 @@ Sistem ini dibangun menggunakan **Laravel 12** sebagai backend dan Vue.js untuk 
 ---
 
 ## 🚀 Fitur Utama
-
----
 
 -   Dashboard Utama
     -   KPI Cards: Total Product Sales & Unique Customer
@@ -99,6 +95,8 @@ php artisan migrate --seed
 ```bash
 php artisan serve
 ```
+
+---
 
 ## 🧮 Endpoint API
 
@@ -177,6 +175,8 @@ Content-Type: application/json
 Accept: application/json
 ```
 
+---
+
 ## 🧑‍💻 Teknologi yang Digunakan
 
 Laravel 12
@@ -185,6 +185,8 @@ MySQL
 Eloquent ORM
 Postman (API Testing)
 Composer
+
+---
 
 ## ✉️ Kontak
 
