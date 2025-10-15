@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\ProductsController;
+use App\Http\Controllers\Api\TopSellingController;
 use App\Http\Controllers\Api\TransactionsController;
 use App\Http\Controllers\Api\UsersController ;
 use Illuminate\Support\Facades\Route;
@@ -15,4 +16,5 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('products', ProductsController::class);
     Route::apiResource('transactions', TransactionsController::class);
     Route::post('/transactions/import', [TransactionsController::class, 'import']);
+    Route::get('/top-selling', [TopSellingController::class, 'topSelling']);
 });
