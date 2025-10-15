@@ -1,61 +1,180 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
-
 <p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
+  <a href="https://laravel.com" target="_blank">
+    <img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo">
+  </a>
 </p>
 
-## About Laravel
+<p align="center">
+  <a href="https://github.com/laravel/framework/actions">
+    <img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status">
+  </a>
+  <a href="https://packagist.org/packages/laravel/framework">
+    <img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads">
+  </a>
+  <a href="https://packagist.org/packages/laravel/framework">
+    <img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version">
+  </a>
+  <a href="https://packagist.org/packages/laravel/framework">
+    <img src="https://img.shields.io/packagist/l/laravel/framework" alt="License">
+  </a>
+</p>
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+---
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+# 📦 HPP Transactions System (Average Method)
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+Sistem ini dibangun menggunakan **Laravel 12** untuk mencatat transaksi **pembelian dan penjualan** barang sekaligus menghitung **HPP (Harga Pokok Penjualan)** menggunakan **metode rata-rata (Average Method)** secara otomatis.
 
-## Learning Laravel
+Tujuan utama sistem ini adalah mempermudah proses perhitungan nilai persediaan dan harga pokok secara real-time berbasis transaksi yang terjadi.
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+---
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+## 🚀 Fitur Utama
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+-   CRUD Data Transaksi HPP (Pembelian & Penjualan)
+-   Perhitungan otomatis:
+    -   Harga Pokok Penjualan (HPP) dengan metode **Average Method**
+    -   Saldo Kuantitas Barang (Qty Balance)
+    -   Nilai Persediaan (Value Balance)
+-   Validasi otomatis untuk transaksi dengan stok tidak mencukupi
+-   API berbasis JSON, siap diintegrasikan dengan frontend
 
-## Laravel Sponsors
+---
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+## ⚙️ Instalasi & Setup Project
 
-### Premium Partners
+### 1. Clone Repository
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+```bash
+git clone https://github.com/BayMx19/HPP-Average_Isa-Iman-Muhammad_Tes-BE-2.git
+cd HPP-Average_Isa-Iman-Muhammad_Tes-BE-2
+```
 
-## Contributing
+### 2. Install Dependency
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+```bash
+composer install
+```
 
-## Code of Conduct
+### 3. Copy File Environment
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+```bash
+cp .env.example .env
+php artisan key:generate
+```
 
-## Security Vulnerabilities
+### 4. Konfigurasi Database
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+```bash
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=sales_dashboard
+DB_USERNAME=root
+DB_PASSWORD=
+```
 
-## License
+### 5. Jalankan Migrasi dan Seeder
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+```bash
+php artisan migrate --seed
+```
+
+### 6. Jalankan Server Lokal (Server default: http://127.0.0.1:8000)
+
+```bash
+php artisan serve
+```
+
+## 🧮 Endpoint API
+
+| Method   | Endpoint        | Deskripsi                                    |
+| -------- | --------------- | -------------------------------------------- |
+| **POST** | `/api/register` | Registrasi user baru                         |
+| **POST** | `/api/login`    | Login user                                   |
+| **POST** | `/api/logout`   | Logout user (autentikasi Sanctum dibutuhkan) |
+
+### Dashboard Utama
+
+| Method  | Endpoint                       | Deskripsi                                 |
+| ------- | ------------------------------ | ----------------------------------------- |
+| **GET** | `/api/dashboard/kpi`           | Menampilkan KPI utama                     |
+| **GET** | `/api/dashboard/revenue-sales` | Menampilkan revenue vs sales              |
+| **GET** | `/api/dashboard/sales-channel` | Menampilkan penjualan berdasarkan channel |
+| **GET** | `/api/dashboard/top-products`  | Menampilkan produk terlaris               |
+
+### Dashboard Product
+
+| Method  | Endpoint                                   | Deskripsi                                      |
+| ------- | ------------------------------------------ | ---------------------------------------------- |
+| **GET** | `/api/dashboard-product/top-products`      | Menampilkan produk terlaris spesifik dashboard |
+| **GET** | `/api/dashboard-product/channel-overview`  | Menampilkan overview channel                   |
+| **GET** | `/api/dashboard-product/sessions-overview` | Menampilkan overview sesi                      |
+
+### Users
+
+| Method     | Endpoint          | Deskripsi               |
+| ---------- | ----------------- | ----------------------- |
+| **GET**    | `/api/users`      | Menampilkan semua user  |
+| **POST**   | `/api/users`      | Menambah user baru      |
+| **GET**    | `/api/users/{id}` | Menampilkan detail user |
+| **PUT**    | `/api/users/{id}` | Mengubah data user      |
+| **DELETE** | `/api/users/{id}` | Menghapus user          |
+
+### Products
+
+| Method     | Endpoint             | Deskripsi                 |
+| ---------- | -------------------- | ------------------------- |
+| **GET**    | `/api/products`      | Menampilkan semua produk  |
+| **POST**   | `/api/products`      | Menambah produk baru      |
+| **GET**    | `/api/products/{id}` | Menampilkan detail produk |
+| **PUT**    | `/api/products/{id}` | Mengubah data produk      |
+| **DELETE** | `/api/products/{id}` | Menghapus produk          |
+
+### Transactions
+
+| Method     | Endpoint                   | Deskripsi                    |
+| ---------- | -------------------------- | ---------------------------- |
+| **GET**    | `/api/transactions`        | Menampilkan semua transaksi  |
+| **POST**   | `/api/transactions`        | Menambah transaksi baru      |
+| **GET**    | `/api/transactions/{id}`   | Menampilkan detail transaksi |
+| **PUT**    | `/api/transactions/{id}`   | Mengubah data transaksi      |
+| **DELETE** | `/api/transactions/{id}`   | Menghapus transaksi          |
+| **POST**   | `/api/transactions/import` | Import transaksi via CSV     |
+
+### Top Selling
+
+| Method  | Endpoint           | Deskripsi                   |
+| ------- | ------------------ | --------------------------- |
+| **GET** | `/api/top-selling` | Menampilkan produk terlaris |
+
+### Profile
+
+| Method  | Endpoint       | Deskripsi                    |
+| ------- | -------------- | ---------------------------- |
+| **GET** | `/api/profile` | Menampilkan data profil user |
+| **PUT** | `/api/profile` | Mengubah data profil user    |
+
+> Semua endpoint di atas memerlukan autentikasi **Sanctum** kecuali `/register` dan `/login`.  
+> Response dikembalikan dalam format JSON, dan pastikan header request:
+
+```bash
+Content-Type: application/json
+Accept: application/json
+```
+
+## 🧑‍💻 Teknologi yang Digunakan
+
+Laravel 12
+PHP 8.2+
+MySQL
+Eloquent ORM
+Postman (API Testing)
+Composer
+
+## ✉️ Kontak
+
+Untuk pertanyaan atau pengembangan lebih lanjut, hubungi:<br>
+Isa Iman Muhammad<br>
+📩 Email: isaimanmuhammad19@gmail.com<br>
+🌐 Website: https://isaimanmuhammad.netlify.app/<br>
