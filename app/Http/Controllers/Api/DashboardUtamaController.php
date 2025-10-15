@@ -11,8 +11,7 @@ use Illuminate\Support\Facades\DB;
 
 class DashboardUtamaController extends Controller
 {
-    public function kpi()
-    {
+    public function kpi(){
         $totalProductSales = TransactionModel::sum('qty_terjual');
         $uniqueCustomer = TransactionModel::distinct('customer')->count('customer');
 
@@ -25,9 +24,7 @@ class DashboardUtamaController extends Controller
         ]);
     }
 
-    // 2. Revenue vs Sales (Combo Chart)
-    public function revenueVsSales(Request $request)
-    {
+    public function revenueVsSales(Request $request){
         $start = $request->input('start') ?? now()->subMonth()->format('Y-m-d');
         $end = $request->input('end') ?? now()->format('Y-m-d');
 
@@ -47,9 +44,7 @@ class DashboardUtamaController extends Controller
         ]);
     }
 
-    // 3. Total Sales by Channel (Donut Chart)
-    public function salesByChannel()
-    {
+    public function salesByChannel(){
         $data = TransactionModel::select(
                 'channel',
                 DB::raw('SUM(total_penjualan) as total_revenue')
@@ -63,9 +58,7 @@ class DashboardUtamaController extends Controller
         ]);
     }
 
-    // 4. Top Selling Products (Table)
-    public function topSellingProducts($limit = 10)
-    {
+    public function topSellingProducts($limit = 10){
         $data = TransactionModel::select(
                 'products.nama as product_name',
                 DB::raw('SUM(transactions.qty_terjual) as qty_sold'),

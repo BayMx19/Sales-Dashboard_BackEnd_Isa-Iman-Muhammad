@@ -11,9 +11,7 @@ use Illuminate\Support\Facades\DB;
 
 class DashboardProductController extends Controller
 {
-    // 1. Top Selling Products (Table)
-    public function topSellingProducts($limit = 10)
-    {
+    public function topSellingProducts($limit = 10){
         $data = TransactionModel::select(
                 'products.nama as product_name',
                 DB::raw('SUM(transactions.qty_terjual) as qty_sold'),
@@ -33,9 +31,7 @@ class DashboardProductController extends Controller
         ]);
     }
 
-    // 2. Channel Overview (Radar Chart)
-    public function channelOverview()
-    {
+    public function channelOverview(){
         $data = TransactionModel::select(
                 'channel',
                 DB::raw('SUM(qty_terjual) as total_qty')
@@ -49,10 +45,7 @@ class DashboardProductController extends Controller
         ]);
     }
 
-    // 3. Sessions Overview (Line Chart)
-    public function sessionsOverview(Request $request)
-    {
-        // asumsi session = jumlah transaksi per hari
+    public function sessionsOverview(Request $request){
         $start = $request->input('start') ?? now()->subMonth()->format('Y-m-d');
         $end = $request->input('end') ?? now()->format('Y-m-d');
 

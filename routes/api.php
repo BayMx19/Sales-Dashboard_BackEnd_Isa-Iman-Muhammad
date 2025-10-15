@@ -22,7 +22,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('top-products', 'topSellingProducts');
     });
     Route::prefix('dashboard-product')->controller(DashboardProductController::class)->group(function () {
-        Route::get('top-products/{limit?}', 'topSellingProducts');
+        Route::get('top-products', 'topSellingProducts');
         Route::get('channel-overview', 'channelOverview');
         Route::get('sessions-overview', 'sessionsOverview');
     });
