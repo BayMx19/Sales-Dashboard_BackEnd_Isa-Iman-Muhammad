@@ -179,12 +179,11 @@ Accept: application/json
 
 ## 🧑‍💻 Teknologi yang Digunakan
 
-Laravel 12
-PHP 8.2+
-MySQL
-Eloquent ORM
-Postman (API Testing)
-Composer
+-   Laravel 12
+-   PHP 8.2+
+-   MySQL
+-   Eloquent ORM
+-   Postman (API Testing)
 
 ---
 
