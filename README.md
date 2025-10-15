@@ -23,8 +23,6 @@
 
 # 📦 Sales Dashboard System
 
-Tujuan utama sistem ini adalah mempermudah proses perhitungan nilai persediaan dan harga pokok secara real-time berbasis transaksi yang terjadi.
-
 Sistem ini dibangun menggunakan **Laravel 12** sebagai backend dan Vue.js untuk frontend. Tujuan sistem adalah menampilkan **Dashboard Penjualan dengan role-based access (RBAC), realtime polling update, CRUD transaksi, dan import CSV untuk update data**.
 
 ---
