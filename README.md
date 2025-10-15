@@ -56,8 +56,8 @@ Sistem ini dibangun menggunakan **Laravel 12** sebagai backend dan Vue.js untuk 
 ### 1. Clone Repository
 
 ```bash
-git clone https://github.com/BayMx19/HPP-Average_Isa-Iman-Muhammad_Tes-BE-2.git
-cd HPP-Average_Isa-Iman-Muhammad_Tes-BE-2
+git clone https://github.com/BayMx19/Sales-Dashboard_BackEnd_Isa-Iman-Muhammad.git
+cd Sales-Dashboard_BackEnd_Isa-Iman-Muhammad
 ```
 
 ### 2. Install Dependency
