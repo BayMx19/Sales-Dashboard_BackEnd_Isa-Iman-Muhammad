@@ -21,23 +21,37 @@
 
 ---
 
-# 📦 HPP Transactions System (Average Method)
+# 📦 Sales Dashboard System
 
 Sistem ini dibangun menggunakan **Laravel 12** untuk mencatat transaksi **pembelian dan penjualan** barang sekaligus menghitung **HPP (Harga Pokok Penjualan)** menggunakan **metode rata-rata (Average Method)** secara otomatis.
 
 Tujuan utama sistem ini adalah mempermudah proses perhitungan nilai persediaan dan harga pokok secara real-time berbasis transaksi yang terjadi.
 
+Sistem ini dibangun menggunakan **Laravel 12** sebagai backend dan Vue.js untuk frontend. Tujuan sistem adalah menampilkan **Dashboard Penjualan dengan role-based access (RBAC), realtime polling update, CRUD transaksi, dan import CSV untuk update data**.
+
 ---
 
 ## 🚀 Fitur Utama
 
--   CRUD Data Transaksi HPP (Pembelian & Penjualan)
--   Perhitungan otomatis:
-    -   Harga Pokok Penjualan (HPP) dengan metode **Average Method**
-    -   Saldo Kuantitas Barang (Qty Balance)
-    -   Nilai Persediaan (Value Balance)
--   Validasi otomatis untuk transaksi dengan stok tidak mencukupi
--   API berbasis JSON, siap diintegrasikan dengan frontend
+---
+
+-   Dashboard Utama
+    -   KPI Cards: Total Product Sales & Unique Customer
+    -   Charts:
+        -   Revenue vs Sales (Combo Chart)
+        -   Total Sales by Channel (Donut Chart)
+    -   Top Selling Products (Table: Product Name, Qty Sold, Talent/Endorser)
+-   Dashboard Produk
+    -   Top Selling Products Table (Qty Sold, Talent/Endorser, Channel, Harga)
+    -   Channel Overview (Radar Chart)
+    -   Sessions Overview (Line Chart)
+-   CRUD Admin (Admin Only)
+    -   Tambah, Edit, Hapus transaksi produk
+-   Realtime Update
+    -   Polling setiap 10 detik untuk update Top Selling Products otomatis
+-   Upload CSV
+    -   Admin dapat meng-upload CSV untuk update transaksi
+    -   Validasi CSV otomatis (qty > 0, harga valid, dll.)
 
 ---
 
