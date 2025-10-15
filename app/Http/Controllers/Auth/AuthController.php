@@ -18,6 +18,16 @@ class AuthController extends Controller
         }
         return strip_tags(trim($input));
     }
+    
+    private function checkRateLimit($action, Request $request){
+        $key = Str::lower($action) . '|' . $request->ip();
+        if (RateLimiter::tooManyAttempts($key, 5)) {
+            throw ValidationException::withMessages([
+                'error' => ['Terlalu banyak percobaan. Silakan coba lagi nanti.'],
+            ])->status(429);
+        }
+        RateLimiter::hit($key, 60); 
+    }
 
     public function register(Request $request){
         $this->checkRateLimit('register', $request);
@@ -55,10 +65,8 @@ class AuthController extends Controller
         }
     }
 
-    public function login(Request $request)
-    {
+    public function login(Request $request){
         $this->checkRateLimit('login', $request);
-
         try {
             $input = $this->sanitizeInput($request->all());
             $validated = $request->validate([
@@ -92,24 +100,13 @@ class AuthController extends Controller
             ], 500);
         }
     }
-    public function logout(Request $request)
-    {
+    public function logout(Request $request){
         $user = $request->user();
         if ($user) {
             $user->currentAccessToken()->delete();
             return response()->json(['message' => 'Logged out']);
         }
-
         return response()->json(['message' => 'User not authenticated'], 401);
     }
-    private function checkRateLimit($action, Request $request)
-    {
-        $key = Str::lower($action) . '|' . $request->ip();
-        if (RateLimiter::tooManyAttempts($key, 5)) {
-            throw ValidationException::withMessages([
-                'error' => ['Terlalu banyak percobaan. Silakan coba lagi nanti.'],
-            ])->status(429);
-        }
-        RateLimiter::hit($key, 60); 
-    }
+    
 }
