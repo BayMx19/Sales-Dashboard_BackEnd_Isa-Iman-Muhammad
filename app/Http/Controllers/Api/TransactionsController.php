@@ -16,6 +16,9 @@ class TransactionsController extends Controller
         $length = $request->input('length', 10);
         $start = $request->input('start', 0);   
         $search = $request->input('search.value'); 
+        $order = $request->input('order');
+
+        $columns = ['product.nama','qty_terjual','total_penjualan','lokasi','channel','customer','tanggal_transaksi'];
 
         $query = TransactionModel::with(['product:id,nama'])
             ->select('id','product_id','qty_terjual','total_penjualan','lokasi','channel','customer','tanggal_transaksi');
@@ -28,8 +31,23 @@ class TransactionsController extends Controller
 
         $totalData = $query->count();
 
-        $transactions = $query->orderBy('id', 'desc')
-            ->skip($start)
+        if ($order) {
+            $orderColumnIndex = $order[0]['column'];
+            $orderDir = $order[0]['dir'] ?? 'asc';
+            $orderColumn = $columns[$orderColumnIndex] ?? 'id';
+
+            if ($orderColumn === 'product.nama') {
+                $query->join('products','transactions.product_id','=','products.id')
+                    ->orderBy('products.nama', $orderDir)
+                    ->select('transactions.*'); // tetap ambil columns transaksi
+            } else {
+                $query->orderBy($orderColumn, $orderDir);
+            }
+        } else {
+            $query->orderBy('id', 'desc');
+        }
+
+        $transactions = $query->skip($start)
             ->take($length)
             ->get();
 
@@ -40,7 +58,6 @@ class TransactionsController extends Controller
             'data' => $transactions,
         ]);
     }
-
 
     public function store(Request $request){
         $validated = $request->validate([
@@ -110,7 +127,7 @@ class TransactionsController extends Controller
 
     public function import(Request $request){
         $request->validate([
-            'file' => 'required|mimes:csv,txt|max:2048',
+            'file' => 'required|mimes:csv,txt|max:1024',
         ]);
 
         $file = $request->file('file');
@@ -132,6 +149,7 @@ class TransactionsController extends Controller
                 if (!$row) {
                     throw new \Exception("Format CSV salah di baris ke-" . ($index + 2));
                 }
+
                 $productName = trim($row['Nama Produk'] ?? '');
                 $tanggalStr = trim($row['Tanggal Transaksi'] ?? '');
                 $qty = (int) ($row['Produk Terjual'] ?? 0);
@@ -141,22 +159,37 @@ class TransactionsController extends Controller
                 $customer = trim($row['Customer'] ?? '');
 
                 if (!$productName) continue;
+
+                $productName = preg_replace('/^[=+\-@]/', "'", $productName);
+                $customer = preg_replace('/^[=+\-@]/', "'", $customer);
+                $lokasi = preg_replace('/^[=+\-@]/', "'", $lokasi);
+
+                if ($qty <= 0) {
+                    throw new \Exception("Qty harus lebih dari 0 di baris ke-" . ($index + 2));
+                }
+                if ($total <= 0) {
+                    throw new \Exception("Total Penjualan harus lebih dari 0 di baris ke-" . ($index + 2));
+                }
+
                 $product = ProductModel::firstOrCreate(['nama' => $productName], ['harga' => 0]);
+
                 try {
                     $tanggal = Carbon::createFromFormat('j-M-y', $tanggalStr)->format('Y-m-d');
                 } catch (\Exception $e) {
                     $tanggal = now()->format('Y-m-d'); // fallback
                 }
+
                 TransactionModel::create([
                     'product_id' => $product->id,
                     'qty_terjual' => $qty,
                     'total_penjualan' => $total,
                     'lokasi' => $lokasi,
-                    'channel' => ucfirst(strtolower($channel)), // biar pasti 'Online' 'Offline' 'Event'
+                    'channel' => ucfirst(strtolower($channel)), // Online / Offline / Event
                     'customer' => $customer,
                     'tanggal_transaksi' => $tanggal,
                 ]);
             }
+
             DB::commit();
             return response()->json(['status' => 'success']);
         } catch (\Throwable $th) {
@@ -167,4 +200,5 @@ class TransactionsController extends Controller
             ], 500);
         }
     }
+
 }
