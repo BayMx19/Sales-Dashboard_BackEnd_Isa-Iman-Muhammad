@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\ProductsController;
+use App\Http\Controllers\Api\ProfileController;
 use App\Http\Controllers\Api\TopSellingController;
 use App\Http\Controllers\Api\TransactionsController;
 use App\Http\Controllers\Api\UsersController ;
@@ -17,4 +18,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('transactions', TransactionsController::class);
     Route::post('/transactions/import', [TransactionsController::class, 'import']);
     Route::get('/top-selling', [TopSellingController::class, 'topSelling']);
+     Route::get('/profile', [ProfileController::class, 'show']);
+    Route::put('/profile', [ProfileController::class, 'update']);
 });
